@@ -1,0 +1,58 @@
+#!/usr/bin/env bash
+
+COUNT="0"
+_PRINT() {
+  COUNT="$((COUNT+1))"
+  COLOR='\033[0;32m'
+  NC='\033[0m' # No Color
+  echo -e "${COLOR}${COUNT} - ${MSG}${NC}"
+}
+_FAILED() {
+  COLOR='\033[0;31m'
+  NC='\033[0m' # No Color
+  echo -e "${COLOR}Update failed!${NC}"
+  _START
+  exit 1
+}
+
+_GSAD() {
+  GSAD="$(ps -ef | grep gsad | grep -v grep | grep -v gsad.log)"
+  [ -z "${GSAD}" ] && gsad
+}
+
+_UPDATE() {
+  MSG="NVT sync" && _PRINT
+  greenbone-nvt-sync || _FAILED
+
+  MSG="Openvasmd rebuild" && _PRINT
+  openvasmd --rebuild --progress || _FAILED
+
+  MSG="Certdata sync" && _PRINT
+  greenbone-certdata-sync || _FAILED
+
+  MSG="Scapdata sync" && _PRINT
+  greenbone-scapdata-sync || _FAILED
+
+  MSG="Openvasmd update" && _PRINT
+  openvasmd --update --verbose --progress >/dev/null || _FAILED
+}
+
+_START() {
+  MSG="Stop process" && _PRINT
+  killall -9 openvassd openvasmd >/dev/null
+
+  MSG="Start Openvassd" && _PRINT
+  (openvassd >/dev/null) & 
+
+  MSG="Start Openvasmd" && _PRINT
+  (openvasmd >/dev/null) &
+}
+
+_GSAD
+_UPDATE
+_START
+_GSAD
+
+MSG="Update completed!" && _PRINT
+
+exit 1

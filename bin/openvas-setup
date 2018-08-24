@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+
+_SYNC() {
+  greenbone-nvt-sync
+  greenbone-certdata-sync
+  greenbone-scapdata-sync
+}
+
+_CERT() {
+  if [ ! -f "/var/lib/openvas/CA/clientcert.pem" ] || \
+  [ ! -f "/var/lib/openvas/CA/cacert.pem" ] || \
+  [ ! -f "/var/lib/openvas/private/CA/serverkey.pem" ] || \
+  [ ! -f "/var/lib/openvas/CA/servercert.pem" ] || \
+  [ ! -f "/var/lib/openvas/private/CA/clientkey.pem" ] || \
+  [ ! -f "/var/lib/openvas/CA/clientcert.pem" ] ; then
+    openvas-manage-certs -af
+  fi
+}
+
+_PASS() {
+  OPENVAS_ADMIN="$(openvasmd --get-users | grep -w admin)"
+  if [ -z "${OPENVAS_ADMIN}" ]; then
+    openvasmd --create-user=admin --role=Admin \
+    && openvasmd --user=admin --new-password=admin
+  fi
+}
+
+
+_SYNC
+_CERT
+_PASS
+
