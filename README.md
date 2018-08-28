@@ -12,7 +12,7 @@
 
 ## Quick start
 
-Docker command
+Docker command:
 
 ```
 $ docker volume create openvas_data
@@ -22,7 +22,7 @@ $ docker run -d --name openvas --restart always \
    dgiorgio/openvas
 ```
     
-Docker compose
+Docker compose:
 
 ```
 version: '3'
@@ -57,8 +57,9 @@ volumes:
 
 ## Custom scripts
 
-before - `bin/script-custom-before.sh` - `/usr/local/bin/script-custom-before.sh`
-after - `bin/script-custom-after.sh` - `/usr/local/bin/script-custom-after.sh`
+Before - `bin/script-custom-before.sh` - `/usr/local/bin/script-custom-before.sh`
+
+After - `bin/script-custom-after.sh` - `/usr/local/bin/script-custom-after.sh`
 
 ```
 $ docker run -d --name openvas --restart always \
