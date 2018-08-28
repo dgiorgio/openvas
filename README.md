@@ -75,5 +75,5 @@ volumes:
 
 ## License
 
-This Docker image is licensed under the BSD, see [LICENSE](LICENSE).
+This Docker image is licensed under the BSD, see [LICENSE](LICENSE.md).
 
