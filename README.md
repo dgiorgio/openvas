@@ -12,8 +12,6 @@
 
 ## Quick start
 
-Docker command:
-
 ```
 $ docker volume create openvas_data
 $ docker run -d --name openvas --restart always \
@@ -21,8 +19,28 @@ $ docker run -d --name openvas --restart always \
   -v openvas_data:/var/lib/openvas/ \
    dgiorgio/openvas
 ```
-    
-Docker compose:
+#### Update
+
+```
+$ docker exec openvas update-NVT
+```
+
+## Custom scripts
+
+Before: `bin/script-custom-before.sh` - `/usr/local/bin/script-custom-before.sh`
+
+After: `bin/script-custom-after.sh` - `/usr/local/bin/script-custom-after.sh`
+
+```
+$ docker run -d --name openvas --restart always \
+  -p 80:80 -p 443:443 -p 9390-9392:9390-9392 \
+  -v openvas_data:/var/lib/openvas/ \
+  -v "~/script-custom-before.sh:/usr/local/bin/script-custom-before.sh" \
+  -v "~/myscript.sh:/usr/local/bin/script-custom-after.sh" \
+   dgiorgio/openvas
+```
+
+## Compose
 
 ```
 version: '3'
@@ -53,21 +71,6 @@ services:
       
 volumes:
   data:
-```
-
-## Custom scripts
-
-Before - `bin/script-custom-before.sh` - `/usr/local/bin/script-custom-before.sh`
-
-After - `bin/script-custom-after.sh` - `/usr/local/bin/script-custom-after.sh`
-
-```
-$ docker run -d --name openvas --restart always \
-  -p 80:80 -p 443:443 -p 9390-9392:9390-9392 \
-  -v openvas_data:/var/lib/openvas/ \
-  -v "~/script-custom-before.sh:/usr/local/bin/script-custom-before.sh" \
-  -v "~/myscript.sh:/usr/local/bin/script-custom-after.sh" \
-   dgiorgio/openvas
 ```
 
 ## License
