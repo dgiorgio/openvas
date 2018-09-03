@@ -25,6 +25,12 @@ $ docker run -d --name openvas --restart always \
 $ docker exec openvas update-NVT
 ```
 
+Full update and check (if necessary):
+
+```
+$ docker exec openvas update-NVT full
+```
+
 ## Custom scripts
 
 Before: `bin/script-custom-before.sh` - `/usr/local/bin/script-custom-before.sh`
