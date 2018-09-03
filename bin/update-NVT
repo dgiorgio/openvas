@@ -37,6 +37,14 @@ _UPDATE() {
   openvasmd --update --verbose --progress >/dev/null || _FAILED
 }
 
+_FAST_UPDATE() {
+  MSG="NVT sync" && _PRINT
+  greenbone-nvt-sync || _FAILED
+
+  MSG="Openvasmd rebuild" && _PRINT
+  openvasmd --rebuild --progress || _FAILED
+}
+
 _START() {
   MSG="Stop process" && _PRINT
   killall -9 openvassd openvasmd >/dev/null
@@ -48,10 +56,17 @@ _START() {
   (openvasmd >/dev/null) &
 }
 
-_GSAD
-_UPDATE
-_START
-_GSAD
+case "${1}" in
+  full)
+    _GSAD
+    _UPDATE
+    _START
+    _GSAD
+    ;;
+  *)
+    _FAST_UPDATE
+    ;;
+esac
 
 MSG="Update completed!" && _PRINT
 
